@@ -58,19 +58,6 @@ function isNonMirrorP2PCDN(url: URL): boolean {
   return port !== '' && port !== '80' && port !== '443';
 }
 
-const RESOURCE_ID_REGEX = /\/(\d+-\d+-\d+\.m4s)(?:$|\?)/;
-
-// Extract the stable resource identifier {cid}-{n}-{quality}.m4s as the match
-// key. A stream's mcdn baseUrl, mirror backupUrl and the player's actual
-// request all carry different host and search, but this filename segment stays
-// constant — it is the only reliable way to group them. Returns null when the
-// url does not look like a resource url, so callers fall back to the old
-// pathname+search behavior.
-function getResourceKey(urlObj: URL): string | null {
-  const match = RESOURCE_ID_REGEX.exec(urlObj.pathname);
-  return match ? match[1] : null;
-}
-
 function createCDNUtil() {
   interface CdnUrlData {
     replacementType: string,
@@ -134,7 +121,7 @@ function createCDNUtil() {
         urlObj = url;
       }
 
-      const key = getResourceKey(urlObj) ?? (urlObj.pathname + urlObj.search);
+      const key = urlObj.pathname + urlObj.search;
 
       const data = cdnDatas.get(key);
       if (data !== undefined) {
@@ -373,7 +360,7 @@ function createCDNUtil() {
 
       knownUrls.forEach((url) => {
         const urlObj = new URL(url);
-        const key = getResourceKey(urlObj) ?? (urlObj.pathname + urlObj.search);
+        const key = urlObj.pathname + urlObj.search;
 
         cdnDatas.set(key, {
           replacementType,
