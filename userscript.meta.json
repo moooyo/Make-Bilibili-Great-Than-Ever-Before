@@ -18,6 +18,6 @@
     "https://live.bilibili.com/*",
     "https://space.bilibili.com/*"
   ],
-  "updateURL": "https://unpkg.com/make-bilibili-great-than-ever-before@latest/dist/make-bilibili-great-than-ever-before.meta.js",
-  "downloadURL": "https://unpkg.com/make-bilibili-great-than-ever-before@latest/dist/make-bilibili-great-than-ever-before.user.js"
+  "updateURL": "https://github.com/moooyo/Make-Bilibili-Great-Than-Ever-Before/releases/latest/download/make-bilibili-great-than-ever-before.meta.js",
+  "downloadURL": "https://github.com/moooyo/Make-Bilibili-Great-Than-Ever-Before/releases/latest/download/make-bilibili-great-than-ever-before.user.js"
 }
