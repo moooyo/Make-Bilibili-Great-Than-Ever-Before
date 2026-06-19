@@ -46,6 +46,18 @@ function isP2PCDNDomain(hostname: string): boolean {
   return subdomain.includes('302');
 }
 
+// For non-mirror upgcxcode urls only: besides the known domain patterns, a
+// non-standard port (anything other than the implicit/explicit 80 or 443) is
+// treated as a strong PCDN signal. Legit bcache PoPs only ever serve over
+// 80/443, so this keeps their hosts out of the replacement pool.
+function isNonMirrorP2PCDN(url: URL): boolean {
+  if (isP2PCDNDomain(url.hostname)) {
+    return true;
+  }
+  const { port } = url;
+  return port !== '' && port !== '80' && port !== '443';
+}
+
 function createCDNUtil() {
   interface CdnUrlData {
     replacementType: string,
@@ -196,7 +208,7 @@ function createCDNUtil() {
             const url = new URL(urlStr);
 
             // Now we know this is upgcxcode type url, but not mirror type url:
-            if (isP2PCDNDomain(url.hostname)) {
+            if (isNonMirrorP2PCDN(url)) {
               // *.mcdn.bilivideo.* (mcdn type url p2p cdn)
               // upos-\w*-302.* (HTTP 302 p2p cdn)
 
@@ -415,7 +427,7 @@ function createCDNUtil() {
       }
 
       // Now we know this is upgcxcode type url, but not mirror type url:
-      if (isP2PCDNDomain(url.hostname)) {
+      if (isNonMirrorP2PCDN(url)) {
         // *.mcdn.bilivideo.* (mcdn type url p2p cdn)
         // upos-\w*-302.* (HTTP 302 p2p cdn)
         return replaceUpgcxcodeHost(url);
